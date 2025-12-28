@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COUNTER-APP</title>
+</head>
+<body class="light">
+
+  <button class="mode-btn" onclick="toggleMode()">🌙 Dark Mode</button>
+
+  <div id="count">0</div>
+  
+  <div>
+    <button onclick="increment()">+1</button>
+    <button onclick="decrement()">-1</button>
+    <button onclick="reset()">Reset</button>
+  </div>
+
+  <div class="color-picker">
+    <label for="btnColor">Button Color: </label>
+    <input type="color" id="btnColor" value="#ffffff" onchange="changeButtonColor(this.value)">
+  </div>
+
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      color: #000;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #1e1e1e, #121212);
+      color: #fff;
+    }
+
+    #count {
+      font-size: 4rem;
+      margin: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .animate {
+      transform: scale(1.3);
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 10px 25px;
+      margin: 6px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s, color 0.3s;
+    }
+
+    body.dark button {
+      background: black;
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    }
+
+    button:active {
+      transform: scale(0.9);
+    }
+
+    .mode-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .color-picker {
+      margin-top: 20px;
+    }
+  </style>
+<script>
+    // Helper to decide button text color based on background
+    function getContrastYIQ(hexcolor){
+      hexcolor = hexcolor.replace("#", "");
+      const r = parseInt(hexcolor.substr(0,2),16);
+      const g = parseInt(hexcolor.substr(2,2),16);
+      const b = parseInt(hexcolor.substr(4,2),16);
+      const yiq = ((r*299)+(g*587)+(b*114))/1000;
+      return (yiq >= 128) ? 'black' : 'white';
+    }
+    let count = 0;
+    let darkMode = false;
+    
+    const countEl = document.getElementById("count");
+    const body = document.body;
+    const modeBtn = document.querySelector(".mode-btn");
+    const buttons = document.querySelectorAll("button:not(.mode-btn)");
+    
+    function animateNumber() {
+      countEl.classList.add("animate");
+      setTimeout(() => {
+        countEl.classList.remove("animate");
+      }, 300);
+    }
+
+    function updateDisplay() {
+      countEl.textContent = count;
+      animateNumber();
+    }
+
+    function increment() {
+      count++;
+      updateDisplay();
+    }
+
+    function decrement() {
+      if (count > 0) {
+        count--;
+        updateDisplay();
+      }
+    }
+
+    function reset() {
+      count = 0;
+      updateDisplay();
+    }
+
+    function toggleMode() {
+      darkMode = !darkMode;
+      body.className = darkMode ? "dark" : "light";
+      modeBtn.textContent = darkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    function changeButtonColor(color) {
+      buttons.forEach(btn => {
+        btn.style.backgroundColor = color;
+        btn.style.color = getContrastYIQ(color);
+      });
+    }
+
+  </script>
+
+</body>
+</html>
+
